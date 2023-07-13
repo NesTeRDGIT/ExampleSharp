@@ -53,7 +53,7 @@ namespace zms.Generic.SmsService.Application.Interactor.Command.SendMessage
                     }
                     catch (Exception e)
                     {
-                        logger.LogError(e, $"Ошибка проверки статуса СМС сообщения: {message.Id.Value}");
+                        logger.LogError(e, $"Ошибка отправки статуса СМС сообщения: {message.Id.Value}");
                     }
                     await messageRepository.UpdateAsync(message, unitOfWork);
                 }

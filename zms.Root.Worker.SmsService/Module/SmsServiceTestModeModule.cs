@@ -6,7 +6,7 @@ using zms.Root.Worker.SmsService.TestMode;
 namespace zms.Root.Worker.SmsService.Module
 {
     /// <summary>
-    /// Модуль отправки электронной почты
+    /// Модуль отправки СМС
     /// </summary>
     public static class SmsServiceTestModeModule
     {

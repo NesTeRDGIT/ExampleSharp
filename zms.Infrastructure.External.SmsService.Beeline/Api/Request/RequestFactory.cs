@@ -23,7 +23,7 @@ namespace zms.Infrastructure.External.SmsService.Beeline.Api.Request
         public GetStatusRequest GetStatusRequest(params string[] id) => new(options.UserName, options.UserPassword, id.Select(x => new SmsInfo(x)));
 
         /// <summary>
-        /// Получить запрос на проверку статуса сообщений
+        /// Получить запрос на отправку сообщений
         /// </summary>
         /// <param name="sms">Сообщения</param>
         /// <returns></returns>

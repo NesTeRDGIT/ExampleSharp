@@ -91,7 +91,7 @@ namespace zms.Generic.SmsService.Domain.OfMessage
         public ExternalId ExternalId { get; private set; }
 
         /// <summary>
-        /// Дата обработки письма
+        /// Дата обработки
         /// </summary>
         public OptionalDateWithTime ProcessedDate { get; private set; }
 

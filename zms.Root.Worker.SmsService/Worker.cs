@@ -15,9 +15,9 @@ namespace zms.Root.Worker.SmsService
             {
                 using var scope = serviceProvider.CreateScope();
                 var smsService = scope.ServiceProvider.GetRequiredService<SmsService>();
-                var emailServiceOptions = scope.ServiceProvider.GetRequiredService<SmsServiceOptions>();
+                var smsServiceOptions = scope.ServiceProvider.GetRequiredService<SmsServiceOptions>();
                 await smsService.Run();
-                await Task.Delay(emailServiceOptions.TimeOut, cancellationToken);
+                await Task.Delay(smsServiceOptions.TimeOut, cancellationToken);
             }
         }
     }

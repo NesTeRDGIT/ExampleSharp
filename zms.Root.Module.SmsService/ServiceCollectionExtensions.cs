@@ -28,12 +28,12 @@ using zms.Persistence.SqlServer.EF.SmsService.Repository;
 namespace zms.Root.Module.SmsService
 {
     /// <summary>
-    /// Модуль отправки электронной почты
+    /// Модуль отправки СМС
     /// </summary>
     public static class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Добавить модуль отправки электронной
+        /// Добавить модуль отправки СМС
         /// </summary>
         /// <param name="services">Коллекция служб</param>
         /// <param name="configuration">Конфигурация приложения</param>

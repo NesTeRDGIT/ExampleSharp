@@ -53,7 +53,6 @@ namespace zms.Infrastructure.External.SmsService.Beeline.Api.Request.SendSms
         /// <summary>
         /// Период отправки сообщения в формате hh:mm-hh:mm (час:мин-час:мин), в течение которого сообщение должно быть доставлено получателям.
         /// Опция позволяет запретить доставку сообщений, например, в ночное время.
-        /// Для указанного периода времени можно уточнить часовой пояс в параметре TimeZone.
         /// </summary>
         [JsonPropertyName("time_period")]
         [JsonPropertyOrder(5)]

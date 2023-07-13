@@ -1,7 +1,7 @@
 ﻿namespace zms.Generic.SmsService.Application.Use.ClientQuery.GetMessage.Projections
 {
     /// <summary>
-    /// Проекция электронного письма
+    /// Проекция письма
     /// </summary>
     public class MessageProjection
     {
