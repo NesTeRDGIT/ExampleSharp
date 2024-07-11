@@ -1,6 +1,6 @@
 #See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 
 COPY /cert/rootzms.crt /usr/local/share/ca-certificates/rootzms.crt
 RUN chmod 644 /usr/local/share/ca-certificates/rootzms.crt && update-ca-certificates
@@ -8,21 +8,42 @@ RUN chmod 644 /usr/local/share/ca-certificates/rootzms.crt && update-ca-certific
 ENV TZ=Asia/Chita
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
+USER app
 WORKDIR /app
-EXPOSE 80
-EXPOSE 443
+EXPOSE 8081
 
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-
+COPY ["zms.Root.Api.SmsService/zms.Root.Api.SmsService.csproj", "zms.Root.Api.SmsService/"]
+COPY ["zms.Infrastructure.Logging.Serilog/zms.Infrastructure.Logging.Serilog.csproj", "zms.Infrastructure.Logging.Serilog/"]
+COPY ["zms.Root.Module.Application/zms.Root.Module.Application.csproj", "zms.Root.Module.Application/"]
+COPY ["zms.Common.Application/zms.Common.Application.csproj", "zms.Common.Application/"]
+COPY ["zms.Common.SharedKernel/zms.Common.SharedKernel.csproj", "zms.Common.SharedKernel/"]
+COPY ["zms.Infrastructure.Caching.ZmsMemoryCache/zms.Infrastructure.Caching.ZmsMemoryCache.csproj", "zms.Infrastructure.Caching.ZmsMemoryCache/"]
+COPY ["zms.Lib.Extensions/zms.Lib.Extensions.csproj", "zms.Lib.Extensions/"]
+COPY ["zms.Infrastructure.Common.DateTimeProvider/zms.Infrastructure.Common.DateTimeProvider.csproj", "zms.Infrastructure.Common.DateTimeProvider/"]
+COPY ["zms.Persistence.SqlServer.EF.FileStorage/zms.Persistence.SqlServer.EF.FileStorage.csproj", "zms.Persistence.SqlServer.EF.FileStorage/"]
+COPY ["zms.Infrastructure.Utility.FileStorage/zms.Infrastructure.Utility.FileStorage.csproj", "zms.Infrastructure.Utility.FileStorage/"]
+COPY ["zms.Root.Module.SmsService/zms.Root.Module.SmsService.csproj", "zms.Root.Module.SmsService/"]
+COPY ["zms.Infrastructure.Report.SmsService/zms.Infrastructure.Report.SmsService.csproj", "zms.Infrastructure.Report.SmsService/"]
+COPY ["zms.Generic.SmsService.Application/zms.Generic.SmsService.Application.csproj", "zms.Generic.SmsService.Application/"]
+COPY ["zms.Generic.SmsService.Domain/zms.Generic.SmsService.Domain.csproj", "zms.Generic.SmsService.Domain/"]
+COPY ["zms.Infrastructure.Utility.Word/zms.Infrastructure.Utility.Word.csproj", "zms.Infrastructure.Utility.Word/"]
+COPY ["zms.Persistence.FileStorage.SmsService/zms.Persistence.FileStorage.SmsService.csproj", "zms.Persistence.FileStorage.SmsService/"]
+COPY ["zms.Persistence.SqlServer.EF.SmsService/zms.Persistence.SqlServer.EF.SmsService.csproj", "zms.Persistence.SqlServer.EF.SmsService/"]
+COPY ["zms.Persistence.SqlServer.EF.Common/zms.Persistence.SqlServer.EF.Common.csproj", "zms.Persistence.SqlServer.EF.Common/"]
+COPY ["zms.UI.ApiControllers.SmsService/zms.UI.ApiControllers.SmsService.csproj", "zms.UI.ApiControllers.SmsService/"]
+RUN dotnet restore "./zms.Root.Api.SmsService/./zms.Root.Api.SmsService.csproj"
 COPY . .
 WORKDIR "/src/zms.Root.Api.SmsService"
-RUN dotnet build "zms.Root.Api.SmsService.csproj" -c Release -o /app/build
+RUN dotnet build "./zms.Root.Api.SmsService.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "zms.Root.Api.SmsService.csproj" -c Release -o /app/publish /p:UseAppHost=false
+ARG BUILD_CONFIGURATION=Release
+RUN dotnet publish "./zms.Root.Api.SmsService.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
-COPY --from=publish /app/publish .
+COPY --chown=app --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "zms.Root.Api.SmsService.dll"]

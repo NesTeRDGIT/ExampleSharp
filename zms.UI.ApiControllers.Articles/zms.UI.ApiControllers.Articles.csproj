@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>disable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Asp.Versioning.Mvc" Version="8.1.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\zms.Support.Articles.Application\zms.Support.Articles.Application.csproj" />
+	  <ProjectReference Include="..\zms.Support.Identity.Domain\zms.Support.Identity.Domain.csproj" />
+	  <ProjectReference Include="..\zms.UI.ApiControllers.Common\zms.UI.ApiControllers.Common.csproj" />
+	</ItemGroup>
+
+</Project>

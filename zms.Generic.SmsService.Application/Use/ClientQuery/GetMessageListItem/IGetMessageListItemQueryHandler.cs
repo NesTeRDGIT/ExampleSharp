@@ -1,11 +1,9 @@
-﻿using zms.Common.Application.Base.Cqrs;
+﻿using zms.Common.Application.Base.Cqrs.OfCollectionQuery;
 
 namespace zms.Generic.SmsService.Application.Use.ClientQuery.GetMessageListItem
 {
     /// <summary>
     /// Обработчик запроса списка сообщений
     /// </summary>
-    public interface IGetMessageListItemQueryHandler : IQueryHandler<GetMessageListItemQuery, GetMessageListItemResponse>
-    {
-    }
+    public interface IGetMessageListItemQueryHandler : ICollectionQueryHandler<GetMessageListItemQuery, MessageProjection>;
 }

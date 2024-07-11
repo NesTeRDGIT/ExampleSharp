@@ -4,7 +4,7 @@ namespace zms.Root.Worker.SmsService
     {
         private readonly IServiceProvider serviceProvider;
 
-        public Worker(ILogger<Worker> logger, IServiceProvider serviceProvider)
+        public Worker(IServiceProvider serviceProvider)
         {
             this.serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         }

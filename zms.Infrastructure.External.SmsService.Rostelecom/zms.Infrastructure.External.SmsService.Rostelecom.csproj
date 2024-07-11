@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\zms.Common.SharedKernel\zms.Common.SharedKernel.csproj" />
+    <ProjectReference Include="..\zms.Generic.SmsService.Application\zms.Generic.SmsService.Application.csproj" />
+    <ProjectReference Include="..\zms.Generic.SmsService.Domain\zms.Generic.SmsService.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

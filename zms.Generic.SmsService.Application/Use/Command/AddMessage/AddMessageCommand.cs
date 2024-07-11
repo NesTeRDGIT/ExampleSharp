@@ -12,6 +12,4 @@ namespace zms.Generic.SmsService.Application.Use.Command.AddMessage
         /// </summary>
         public List<MessageProjection> Messages { get; set; }
     }
-
-   
 }

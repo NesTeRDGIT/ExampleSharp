@@ -7,41 +7,35 @@ using zms.Generic.SmsService.Domain.OfMessage;
 
 namespace zms.Generic.SmsService.Application.Interactor.Command.AddMessage
 {
-    public class AddMessageCommandHandler : IAddMessageCommandHandler
+    public class AddMessageCommandHandler(IMessageRepository messageRepository, IUnitOfWork unitOfWork, IIdGenerator idGenerator) : IAddMessageCommandHandler
     {
-        private readonly IMessageRepository messageRepository;
-        private readonly IUnitOfWork unitOfWork;
-        private readonly IIdGenerator idGenerator;
-
-        public AddMessageCommandHandler(IMessageRepository messageRepository, IUnitOfWork unitOfWork, IIdGenerator idGenerator)
-        {
-            this.messageRepository = messageRepository ?? throw new ArgumentNullException(nameof(messageRepository));
-            this.unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
-            this.idGenerator = idGenerator ?? throw new ArgumentNullException(nameof(idGenerator));
-        }
+        private readonly IMessageRepository messageRepository = messageRepository ?? throw new ArgumentNullException(nameof(messageRepository));
+        private readonly IUnitOfWork unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+        private readonly IIdGenerator idGenerator = idGenerator ?? throw new ArgumentNullException(nameof(idGenerator));
 
         public async Task<AddMessageCommandResponse> HandleAsync(AddMessageCommand command)
         {
             ArgumentNullException.ThrowIfNull(command, nameof(command));
             ArgumentNullException.ThrowIfNull(command, nameof(command.Messages));
 
-            var messageIdList = new List<long>();
-            foreach (var newMessage in command.Messages.Select(CreateMessage))
+            var messageIdList = new List<MessageId>();
+            foreach (var newMessage in command.Messages)
             {
-                await messageRepository.AddAsync(newMessage, unitOfWork);
-                messageIdList.Add(newMessage.Id);
+                var message = await CreateMessage(newMessage);
+                await messageRepository.AddAsync(message, unitOfWork);
+                messageIdList.Add(message.Id);
             }
 
             await unitOfWork.CommitAsync();
 
             return new AddMessageCommandResponse
             {
-                Id = messageIdList
+                Id = messageIdList.Select(x=>x.Value).ToList()
             };
         }
 
 
-        private Message CreateMessage(MessageProjection messageProjection)
+        private async Task<Message> CreateMessage(MessageProjection messageProjection)
         {
             var recipient = new Recipient(messageProjection.Name, new PhoneNumber(messageProjection.Phone));
 
@@ -52,7 +46,7 @@ namespace zms.Generic.SmsService.Application.Interactor.Command.AddMessage
             }
 
             var category = Category.Get(messageProjection.Category);
-            var messageId = idGenerator.NewId<MessageId>();
+            var messageId = await idGenerator.NewIdAsync<MessageId>();
             var message = new Message(messageId, DateWithTime.Current, category,  messageProjection.SenderName, messageProjection.Text, recipient, sendingPeriod);
             return message;
         }

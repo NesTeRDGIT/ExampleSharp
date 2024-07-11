@@ -37,10 +37,7 @@ namespace zms.Generic.SmsService.Application.Interactor.Command.CheckStatusMessa
                         switch (result.Result)
                         {
                             case StatusResultEnum.None:
-                                if (message.Comment != result.Comment)
-                                {
-                                    message.Comment = result.Comment;
-                                }
+                                message.ActualizeProcessingData(result.Comment, result.SmsCount);
                                 break;
                             case StatusResultEnum.Success:
                                 message.ToSuccess(result.SendingDate ?? dateTimeProvider.CurrentDateWithTime, result.SmsCount, result.Comment);

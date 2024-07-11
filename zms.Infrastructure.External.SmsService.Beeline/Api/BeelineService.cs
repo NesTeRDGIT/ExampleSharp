@@ -18,7 +18,7 @@ namespace zms.Infrastructure.External.SmsService.Beeline.Api
         public BeelineService(BeelineOptions options, BeelineJsonSerializer beelineJsonSerializer)
         {
             this.options = options ?? throw new ArgumentNullException(nameof(options));
-            this.beelineJsonSerializer = beelineJsonSerializer ?? throw new ArgumentNullException(nameof(options));
+            this.beelineJsonSerializer = beelineJsonSerializer ?? throw new ArgumentNullException(nameof(beelineJsonSerializer));
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace zms.Infrastructure.External.SmsService.Beeline.Api
 
             var result = await client.SendAsync(message);
             result.EnsureSuccessStatusCode();
-            return beelineJsonSerializer.Deserialize<GetStatusResponse>(await result.Content.ReadAsStringAsync()) ;
+            return beelineJsonSerializer.Deserialize<GetStatusResponse>(await result.Content.ReadAsStringAsync());
         }
 
 

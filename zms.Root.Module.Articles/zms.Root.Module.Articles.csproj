@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\zms.Infrastructure.Utility.FileStorage\zms.Infrastructure.Utility.FileStorage.csproj" />
+    <ProjectReference Include="..\zms.Persistence.FileStorage.Articles\zms.Persistence.FileStorage.Articles.csproj" />
+    <ProjectReference Include="..\zms.Persistence.SqlServer.EF.Articles\zms.Persistence.SqlServer.EF.Articles.csproj" />
+    <ProjectReference Include="..\zms.Persistence.SqlServer.EF.FileStorage\zms.Persistence.SqlServer.EF.FileStorage.csproj" />
+  </ItemGroup>
+
+</Project>

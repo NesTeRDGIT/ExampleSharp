@@ -10,7 +10,7 @@ using zms.Infrastructure.External.SmsService.Beeline.Api.Request;
 namespace zms.Root.Module.SmsService.Beeline
 {
     /// <summary>
-    /// Модуль отправки СМС
+    /// Модуль отправки электронной почты
     /// </summary>
     public static class ProviderOptionsExtensions
     {

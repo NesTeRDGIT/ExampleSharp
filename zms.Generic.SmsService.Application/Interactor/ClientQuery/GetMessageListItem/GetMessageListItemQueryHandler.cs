@@ -1,31 +1,23 @@
-﻿using zms.Common.Application.Base.Cqrs.OfPaginationCollectionResponse;
+﻿using zms.Common.Application.Base.Cqrs.OfCollectionQuery;
 using zms.Generic.SmsService.Application.Persistence.QueryObject.ClientQuery;
 using zms.Generic.SmsService.Application.Use.ClientQuery.GetMessageListItem;
 
 namespace zms.Generic.SmsService.Application.Interactor.ClientQuery.GetMessageListItem
 {
-    public class GetMessageListItemQueryHandler : IGetMessageListItemQueryHandler
+    public class GetMessageListItemQueryHandler(IGetMessageListItemQueryObject getMessageListItemQueryObject) : IGetMessageListItemQueryHandler
     {
-        private readonly IGetMessageListItemQueryObject getMessageListItemQueryObject;
+        private readonly IGetMessageListItemQueryObject getMessageListItemQueryObject = getMessageListItemQueryObject ?? throw new ArgumentNullException(nameof(getMessageListItemQueryObject));
 
-        public GetMessageListItemQueryHandler(IGetMessageListItemQueryObject getMessageListItemQueryObject)
+        public async Task<CollectionResponse<MessageProjection>> HandleAsync(GetMessageListItemQuery query)
         {
-            this.getMessageListItemQueryObject = getMessageListItemQueryObject ?? throw new ArgumentNullException(nameof(getMessageListItemQueryObject));
-        }
+            ArgumentNullException.ThrowIfNull(query, nameof(query));
+            ArgumentNullException.ThrowIfNull(query.LightReadParams, nameof(query.LightReadParams));
 
-        public async Task<GetMessageListItemResponse> HandleAsync(GetMessageListItemQuery query)
-        {
-            return new GetMessageListItemResponse
-            {
-                Metadata = new Metadata
-                {
-                    Pagination = new Pagination
-                    {
-                        Count = await getMessageListItemQueryObject.CountAsync(query.LightReadParams)
-                    }
-                },
-                Data = await getMessageListItemQueryObject.GetAsync(query.LightReadParams)
-            };
+            return query.QueryingPaginationMetadata
+                ? new CollectionResponse<MessageProjection>(await getMessageListItemQueryObject.GetAsync(query.LightReadParams), await getMessageListItemQueryObject.CountAsync(query.LightReadParams))
+                : new CollectionResponse<MessageProjection>(await getMessageListItemQueryObject.GetAsync(query.LightReadParams));
+
+
         }
     }
 }

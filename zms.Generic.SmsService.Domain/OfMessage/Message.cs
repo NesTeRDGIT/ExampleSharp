@@ -9,8 +9,6 @@ namespace zms.Generic.SmsService.Domain.OfMessage
     /// </summary>
     public class Message : AggregateRoot<MessageId>
     {
-        private string comment;
-
         private Message()
         {
             SendingPeriod = TimeInterval.Default;
@@ -91,7 +89,7 @@ namespace zms.Generic.SmsService.Domain.OfMessage
         public ExternalId ExternalId { get; private set; }
 
         /// <summary>
-        /// Дата обработки
+        /// Дата обработки письма
         /// </summary>
         public OptionalDateWithTime ProcessedDate { get; private set; }
 
@@ -108,16 +106,35 @@ namespace zms.Generic.SmsService.Domain.OfMessage
         /// <summary>
         /// Комментарий
         /// </summary>
-        public string Comment
-        {
-            get => comment;
-            set => comment = value ?? string.Empty;
-        }
+        public string Comment { get; private set; }
 
         /// <summary>
         /// Количество отправленных СМС
         /// </summary>
         public int SmsCount { get; private set; }
+
+        /// <summary>
+        /// Актуализировать данные обработки
+        /// </summary>
+        /// <param name="smsCount">Количество СМС</param>
+        /// <param name="comment">Комментарий</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        public void ActualizeProcessingData(string comment, int smsCount)
+        {
+            if (Status != Status.InProcessing)
+            {
+                throw new InvalidOperationDomainException(
+                    $"Только для сообщения со статусом: \"{Status.InProcessing.Name}\" могут быть актуализированы данные о ходе обработки");
+            }
+            if (Comment != comment)
+            {
+                Comment = comment ?? string.Empty;
+            }
+            if (SmsCount != smsCount)
+            {
+                SmsCount = smsCount;
+            }
+        }
 
 
         /// <summary>

@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\zms.Infrastructure.Utility.FileStorage\zms.Infrastructure.Utility.FileStorage.csproj" />
+    <ProjectReference Include="..\zms.Support.Articles.Application\zms.Support.Articles.Application.csproj" />
+  </ItemGroup>
+
+</Project>

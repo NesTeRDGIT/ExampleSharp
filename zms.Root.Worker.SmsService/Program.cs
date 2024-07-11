@@ -21,11 +21,18 @@ namespace zms.Root.Worker.SmsService
                     {
                         loggingBuilder.ClearProviders();
                     })
+                    .ConfigureAppConfiguration((host, builder) =>
+                    {
+                        var configuration = builder.Build();
+
+                        //добавление параметров конфигурации через отдельные файлы (поддержка секретов Docker)
+                        if (configuration["ConfigurationFilesPath"] != null)
+                            builder.AddKeyPerFile(directoryPath: configuration["ConfigurationFilesPath"], optional: true);
+                    })
                     .ConfigureServices((host, services) =>
                     {
                         //замена консольного логгера на логгер по конфигурации
                         logger = SerilogFactory.Create(host.Configuration);
-
 
                         //добавление проектов
                         services.AddApplication(host.Configuration, options =>

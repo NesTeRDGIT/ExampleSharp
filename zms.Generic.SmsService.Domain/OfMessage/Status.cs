@@ -3,7 +3,7 @@
 namespace zms.Generic.SmsService.Domain.OfMessage
 {
     /// <summary>
-    /// Статус письма
+    /// Статус сообщения
     /// </summary>
     public class Status : StaticReference<Status, string>
     {

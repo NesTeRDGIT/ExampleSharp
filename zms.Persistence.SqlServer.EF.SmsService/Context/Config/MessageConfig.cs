@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using zms.Generic.SmsService.Domain.OfMessage;
+using zms.Persistence.SqlServer.EF.Common.Extensions;
 
 namespace zms.Persistence.SqlServer.EF.SmsService.Context.Config
 {
@@ -8,7 +9,7 @@ namespace zms.Persistence.SqlServer.EF.SmsService.Context.Config
     {
         public void Configure(EntityTypeBuilder<Message> builder)
         {
-            builder.ToTable(nameof(Message),b=>b.HasComment("Таблица СМС сообщений"));
+            builder.ToTable(nameof(Message),b=>b.HasComment("Таблица СМС сообщений")).HasRowVersion();
 
             builder.HasKey(t => t.Id);
             builder.Property(x => x.Id).HasConversion(x => x.Value, l => new MessageId(l)).IsRequired().ValueGeneratedNever().HasComment("Первичный ключ");

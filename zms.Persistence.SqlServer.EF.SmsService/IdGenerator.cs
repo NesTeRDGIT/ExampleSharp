@@ -2,7 +2,7 @@
 using zms.Common.SharedKernel.Base.Domain;
 using zms.Generic.SmsService.Domain;
 using zms.Generic.SmsService.Domain.OfMessage;
-using zms.Persistence.SqlServer.EF.Common;
+using zms.Persistence.SqlServer.EF.Common.IdGeneration;
 using zms.Persistence.SqlServer.EF.SmsService.Context;
 
 namespace zms.Persistence.SqlServer.EF.SmsService
@@ -10,7 +10,7 @@ namespace zms.Persistence.SqlServer.EF.SmsService
     /// <summary>
     /// Генератор ID
     /// </summary>
-    public class IdGenerator : IdGeneratorBase, IIdGenerator 
+    public class IdGenerator : EntityIdGeneratorBase, IIdGenerator 
     {
         private readonly DbContextOptions<SmsServiceContext> options;
 
@@ -20,10 +20,10 @@ namespace zms.Persistence.SqlServer.EF.SmsService
             AddKeyParameter(typeof(MessageId), "MessageHiLo");
         }
 
-        public T NewId<T>() where T : IEntityId
+        public async Task<TEntityId> NewIdAsync<TEntityId>() where TEntityId : IEntityId
         {
-            using var context = new SmsServiceContext(options);
-            return NewId<T>(context);
+            await using var context = new SmsServiceContext(options);
+            return await NewId<TEntityId>(context);
         }
     }
 }

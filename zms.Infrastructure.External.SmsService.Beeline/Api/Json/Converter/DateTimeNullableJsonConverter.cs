@@ -25,7 +25,7 @@ namespace zms.Infrastructure.External.SmsService.Beeline.Api.Json.Converter
 
         public override void Write(Utf8JsonWriter writer, DateTime? value, JsonSerializerOptions options)
         {
-            writer.WriteStringValue(value.HasValue ? value.Value.ToString(format) : string.Empty);
+            writer.WriteStringValue(value.HasValue ? value.Value.ToString("dd.MM.yyyy HH:mm:ss") : string.Empty);
         }
     }
 }

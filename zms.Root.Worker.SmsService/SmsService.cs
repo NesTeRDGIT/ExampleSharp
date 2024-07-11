@@ -23,7 +23,6 @@ namespace zms.Root.Worker.SmsService
         {
             try
             {
-                
                 await sendMessageCommandHandler.HandleAsync(new SendMessageCommand());
                 await checkStatusMessageCommandHandler.HandleAsync(new CheckStatusMessageCommand());
             }

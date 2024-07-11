@@ -1,0 +1,103 @@
+#See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
+
+FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
+
+COPY /cert/rootzms.crt /usr/local/share/ca-certificates/rootzms.crt
+RUN chmod 644 /usr/local/share/ca-certificates/rootzms.crt && update-ca-certificates
+
+ENV TZ=Asia/Chita
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+WORKDIR /app
+EXPOSE 80
+EXPOSE 443
+
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
+WORKDIR /src
+COPY ["zms.Root.Api.FrontendApi/zms.Root.Api.FrontendApi.csproj", "zms.Root.Api.FrontendApi/"]
+COPY ["zms.Infrastructure.Utility.LightRead.WebApi/zms.Infrastructure.Utility.LightRead.WebApi.csproj", "zms.Infrastructure.Utility.LightRead.WebApi/"]
+COPY ["zms.Common.Application/zms.Common.Application.csproj", "zms.Common.Application/"]
+COPY ["zms.Common.SharedKernel/zms.Common.SharedKernel.csproj", "zms.Common.SharedKernel/"]
+COPY ["zms.Root.Module.Addressability/zms.Root.Module.Addressability.csproj", "zms.Root.Module.Addressability/"]
+COPY ["zms.Persistence.SqlServer.EF.Addressability/zms.Persistence.SqlServer.EF.Addressability.csproj", "zms.Persistence.SqlServer.EF.Addressability/"]
+COPY ["zms.Persistence.SqlServer.EF.Common/zms.Persistence.SqlServer.EF.Common.csproj", "zms.Persistence.SqlServer.EF.Common/"]
+COPY ["zms.Support.Addressability.Application/zms.Support.Addressability.Application.csproj", "zms.Support.Addressability.Application/"]
+COPY ["zms.Support.Addressability.Domain/zms.Support.Addressability.Domain.csproj", "zms.Support.Addressability.Domain/"]
+COPY ["zms.Support.Addressability.Acl/zms.Support.Addressability.Acl.csproj", "zms.Support.Addressability.Acl/"]
+COPY ["zms.Support.Locating.Application/zms.Support.Locating.Application.csproj", "zms.Support.Locating.Application/"]
+COPY ["zms.Support.Locating.Domain/zms.Support.Locating.Domain.csproj", "zms.Support.Locating.Domain/"]
+COPY ["zms.Root.Module.Application/zms.Root.Module.Application.csproj", "zms.Root.Module.Application/"]
+COPY ["zms.Infrastructure.Caching.ZmsMemoryCache/zms.Infrastructure.Caching.ZmsMemoryCache.csproj", "zms.Infrastructure.Caching.ZmsMemoryCache/"]
+COPY ["zms.Lib.Extensions/zms.Lib.Extensions.csproj", "zms.Lib.Extensions/"]
+COPY ["zms.Infrastructure.Common.DateTimeProvider/zms.Infrastructure.Common.DateTimeProvider.csproj", "zms.Infrastructure.Common.DateTimeProvider/"]
+COPY ["zms.Infrastructure.Logging.Serilog/zms.Infrastructure.Logging.Serilog.csproj", "zms.Infrastructure.Logging.Serilog/"]
+COPY ["zms.Persistence.SqlServer.EF.FileStorage/zms.Persistence.SqlServer.EF.FileStorage.csproj", "zms.Persistence.SqlServer.EF.FileStorage/"]
+COPY ["zms.Infrastructure.Utility.FileStorage/zms.Infrastructure.Utility.FileStorage.csproj", "zms.Infrastructure.Utility.FileStorage/"]
+COPY ["zms.Root.Module.Employment/zms.Root.Module.Employment.csproj", "zms.Root.Module.Employment/"]
+COPY ["zms.Persistence.SqlServer.Dapper.Employment/zms.Persistence.SqlServer.Dapper.Employment.csproj", "zms.Persistence.SqlServer.Dapper.Employment/"]
+COPY ["zms.Infrastructure.Utility.LightRead.Sql/zms.Infrastructure.Utility.LightRead.Sql.csproj", "zms.Infrastructure.Utility.LightRead.Sql/"]
+COPY ["zms.Persistence.SqlServer.Dapper.Common/zms.Persistence.SqlServer.Dapper.Common.csproj", "zms.Persistence.SqlServer.Dapper.Common/"]
+COPY ["zms.Support.Employment.Application/zms.Support.Employment.Application.csproj", "zms.Support.Employment.Application/"]
+COPY ["zms.Support.Employment.Domain/zms.Support.Employment.Domain.csproj", "zms.Support.Employment.Domain/"]
+COPY ["zms.Persistence.SqlServer.EF.Employment/zms.Persistence.SqlServer.EF.Employment.csproj", "zms.Persistence.SqlServer.EF.Employment/"]
+COPY ["zms.Support.Employment.Acl/zms.Support.Employment.Acl.csproj", "zms.Support.Employment.Acl/"]
+COPY ["zms.Core.ExpertAccounting.Application/zms.Core.ExpertAccounting.Application.csproj", "zms.Core.ExpertAccounting.Application/"]
+COPY ["zms.Core.ExpertAccounting.Domain/zms.Core.ExpertAccounting.Domain.csproj", "zms.Core.ExpertAccounting.Domain/"]
+COPY ["zms.Support.Identity.Application/zms.Support.Identity.Application.csproj", "zms.Support.Identity.Application/"]
+COPY ["zms.Support.Identity.Domain/zms.Support.Identity.Domain.csproj", "zms.Support.Identity.Domain/"]
+COPY ["zms.Root.Module.Exchange/zms.Root.Module.Exchange.csproj", "zms.Root.Module.Exchange/"]
+COPY ["zms.Persistence.FileStorage.Exchange/zms.Persistence.FileStorage.Exchange.csproj", "zms.Persistence.FileStorage.Exchange/"]
+COPY ["zms.Infrastructure.Utility.XmlConverter/zms.Infrastructure.Utility.XmlConverter.csproj", "zms.Infrastructure.Utility.XmlConverter/"]
+COPY ["zms.Support.Exchange.Application.Locating/zms.Support.Exchange.Application.Locating.csproj", "zms.Support.Exchange.Application.Locating/"]
+COPY ["zms.Support.Exchange.Application/zms.Support.Exchange.Application.csproj", "zms.Support.Exchange.Application/"]
+COPY ["zms.Support.Exchange.Domain/zms.Support.Exchange.Domain.csproj", "zms.Support.Exchange.Domain/"]
+COPY ["zms.Support.Exchange.Application.Thesaurus/zms.Support.Exchange.Application.Thesaurus.csproj", "zms.Support.Exchange.Application.Thesaurus/"]
+COPY ["zms.Persistence.SqlServer.Dapper.Exchange/zms.Persistence.SqlServer.Dapper.Exchange.csproj", "zms.Persistence.SqlServer.Dapper.Exchange/"]
+COPY ["zms.Persistence.SqlServer.EF.Exchange/zms.Persistence.SqlServer.EF.Exchange.csproj", "zms.Persistence.SqlServer.EF.Exchange/"]
+COPY ["zms.Support.Exchange.Acl/zms.Support.Exchange.Acl.csproj", "zms.Support.Exchange.Acl/"]
+COPY ["zms.Support.MedicalOrganization.Application/zms.Support.MedicalOrganization.Application.csproj", "zms.Support.MedicalOrganization.Application/"]
+COPY ["zms.Support.MedicalOrganization.Domain/zms.Support.MedicalOrganization.Domain.csproj", "zms.Support.MedicalOrganization.Domain/"]
+COPY ["zms.Support.Thesauri.Application/zms.Support.Thesauri.Application.csproj", "zms.Support.Thesauri.Application/"]
+COPY ["zms.Support.Thesauri.Domain/zms.Support.Thesauri.Domain.csproj", "zms.Support.Thesauri.Domain/"]
+COPY ["zms.Root.Module.ExpertAccounting/zms.Root.Module.ExpertAccounting.csproj", "zms.Root.Module.ExpertAccounting/"]
+COPY ["zms.Core.ExpertAccounting.Acl/zms.Core.ExpertAccounting.Acl.csproj", "zms.Core.ExpertAccounting.Acl/"]
+COPY ["zms.Persistence.SqlServer.Dapper.ExpertAccounting/zms.Persistence.SqlServer.Dapper.ExpertAccounting.csproj", "zms.Persistence.SqlServer.Dapper.ExpertAccounting/"]
+COPY ["zms.Persistence.SqlServer.EF.ExpertAccounting/zms.Persistence.SqlServer.EF.ExpertAccounting.csproj", "zms.Persistence.SqlServer.EF.ExpertAccounting/"]
+COPY ["zms.Report.ExpertAccounting/zms.Report.ExpertAccounting.csproj", "zms.Report.ExpertAccounting/"]
+COPY ["zms.Infrastructure.Utility.Excel/zms.Infrastructure.Utility.Excel.csproj", "zms.Infrastructure.Utility.Excel/"]
+COPY ["zms.Root.Module.Identity/zms.Root.Module.Identity.csproj", "zms.Root.Module.Identity/"]
+COPY ["zms.Persistence.SqlServer.EF.Identity/zms.Persistence.SqlServer.EF.Identity.csproj", "zms.Persistence.SqlServer.EF.Identity/"]
+COPY ["zms.Root.Module.Locating/zms.Root.Module.Locating.csproj", "zms.Root.Module.Locating/"]
+COPY ["zms.Persistence.SqlServer.EF.Locating/zms.Persistence.SqlServer.EF.Locating.csproj", "zms.Persistence.SqlServer.EF.Locating/"]
+COPY ["zms.Root.Module.MedicalOrganization/zms.Root.Module.MedicalOrganization.csproj", "zms.Root.Module.MedicalOrganization/"]
+COPY ["zms.Persistence.SqlServer.Dapper.MedicalOrganization/zms.Persistence.SqlServer.Dapper.MedicalOrganization.csproj", "zms.Persistence.SqlServer.Dapper.MedicalOrganization/"]
+COPY ["zms.Persistence.SqlServer.EF.MedicalOrganization/zms.Persistence.SqlServer.EF.MedicalOrganization.csproj", "zms.Persistence.SqlServer.EF.MedicalOrganization/"]
+COPY ["zms.Support.MedicalOrganization.Acl/zms.Support.MedicalOrganization.Acl.csproj", "zms.Support.MedicalOrganization.Acl/"]
+COPY ["zms.Root.Module.Medical/zms.Root.Module.Medical.csproj", "zms.Root.Module.Medical/"]
+COPY ["zms.Core.Medical.Acl/zms.Core.Medical.Acl.csproj", "zms.Core.Medical.Acl/"]
+COPY ["zms.Core.Medical.Application/zms.Core.Medical.Application.csproj", "zms.Core.Medical.Application/"]
+COPY ["zms.Core.Medical.Domain/zms.Core.Medical.Domain.csproj", "zms.Core.Medical.Domain/"]
+COPY ["zms.Persistence.SqlServer.EF.Medical/zms.Persistence.SqlServer.EF.Medical.csproj", "zms.Persistence.SqlServer.EF.Medical/"]
+COPY ["zms.Root.Module.Thesaurus/zms.Root.Module.Thesaurus.csproj", "zms.Root.Module.Thesaurus/"]
+COPY ["zms.Persistence.SqlServer.EF.Thesauri/zms.Persistence.SqlServer.EF.Thesauri.csproj", "zms.Persistence.SqlServer.EF.Thesauri/"]
+COPY ["zms.UI.ApiControllers.Addressability/zms.UI.ApiControllers.Addressability.csproj", "zms.UI.ApiControllers.Addressability/"]
+COPY ["zms.UI.ApiControllers.Common/zms.UI.ApiControllers.Common.csproj", "zms.UI.ApiControllers.Common/"]
+COPY ["zms.UI.ApiControllers.Employment/zms.UI.ApiControllers.Employment.csproj", "zms.UI.ApiControllers.Employment/"]
+COPY ["zms.UI.ApiControllers.Exchange/zms.UI.ApiControllers.Exchange.csproj", "zms.UI.ApiControllers.Exchange/"]
+COPY ["zms.UI.ApiControllers.ExpertAccounting/zms.UI.ApiControllers.ExpertAccounting.csproj", "zms.UI.ApiControllers.ExpertAccounting/"]
+COPY ["zms.UI.ApiControllers.Identity/zms.UI.ApiControllers.Identity.csproj", "zms.UI.ApiControllers.Identity/"]
+COPY ["zms.UI.ApiControllers.Locating/zms.UI.ApiControllers.Locating.csproj", "zms.UI.ApiControllers.Locating/"]
+COPY ["zms.UI.ApiControllers.MedicalOrganization/zms.UI.ApiControllers.MedicalOrganization.csproj", "zms.UI.ApiControllers.MedicalOrganization/"]
+COPY ["zms.UI.ApiControllers.Thesaurus/zms.UI.ApiControllers.Thesaurus.csproj", "zms.UI.ApiControllers.Thesaurus/"]
+RUN dotnet restore "zms.Root.Api.FrontendApi/zms.Root.Api.FrontendApi.csproj"
+COPY . .
+WORKDIR "/src/zms.Root.Api.FrontendApi"
+RUN dotnet build "zms.Root.Api.FrontendApi.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "zms.Root.Api.FrontendApi.csproj" -c Release -o /app/publish /p:UseAppHost=false
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "zms.Root.Api.FrontendApi.dll"]

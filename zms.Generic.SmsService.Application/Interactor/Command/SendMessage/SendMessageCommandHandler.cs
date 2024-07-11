@@ -28,7 +28,7 @@ namespace zms.Generic.SmsService.Application.Interactor.Command.SendMessage
         public async Task<SendMessageCommandResponse> HandleAsync(SendMessageCommand command)
         {
             var messages = await messageRepository.GetAsync(
-                MessageSpecificationFactory.ByStatus(Status.New) && 
+                MessageSpecificationFactory.ByStatus(Status.New) & 
                 MessageSpecificationFactory.TimePeriodInclude(dateTimeProvider.CurrentDateWithTime.GetTime()), 
                 unitOfWork);
             if (messages.Count != 0)
@@ -53,7 +53,7 @@ namespace zms.Generic.SmsService.Application.Interactor.Command.SendMessage
                     }
                     catch (Exception e)
                     {
-                        logger.LogError(e, $"Ошибка отправки статуса СМС сообщения: {message.Id.Value}");
+                        logger.LogError(e, $"Ошибка отправки СМС сообщения: {message.Id.Value}");
                     }
                     await messageRepository.UpdateAsync(message, unitOfWork);
                 }

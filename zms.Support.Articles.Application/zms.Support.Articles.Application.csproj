@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\zms.Common.Application\zms.Common.Application.csproj" />
+    <ProjectReference Include="..\zms.Support.Articles.Domain\zms.Support.Articles.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

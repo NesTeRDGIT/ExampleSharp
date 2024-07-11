@@ -1,5 +1,5 @@
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.AspNetCore.Mvc.Versioning;
+using Asp.Versioning;
+using Asp.Versioning.ApiExplorer;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using zms.Infrastructure.Logging.Serilog;
@@ -7,7 +7,6 @@ using zms.Root.Api.SmsService.Json.Converters;
 using zms.Root.Api.SmsService.Swagger;
 using zms.Root.Module.Application;
 using zms.Root.Module.SmsService;
-using zms.Root.Module.SmsService.Beeline;
 
 namespace zms.Root.Api.SmsService
 {
@@ -22,6 +21,10 @@ namespace zms.Root.Api.SmsService
                 logger.Information("Start SmsServiceApi");
 
                 var builder = WebApplication.CreateBuilder(args);
+
+                //добавление параметров конфигурации через отдельные файлы (поддержка секретов Docker)
+                if (builder.Configuration["ConfigurationFilesPath"] != null)
+                    builder.Configuration.AddKeyPerFile(directoryPath: builder.Configuration["ConfigurationFilesPath"], optional: true);
 
                 builder.Logging.ClearProviders();
                 logger = SerilogFactory.Create(builder.Configuration); //замена консольного логгера на логгер по конфигурации
@@ -72,9 +75,7 @@ namespace zms.Root.Api.SmsService
                 options.ApiVersionSelector = new CurrentImplementationApiVersionSelector(options); //актуальна последн€€ верси€ API
                 //options.ApiVersionSelector = new ConstantApiVersionSelector(new ApiVersion(2, 0)); //актуальна конкретна€ верси€ API
                 options.AssumeDefaultVersionWhenUnspecified = true;
-            });
-
-            services.AddVersionedApiExplorer(options =>
+            }).AddApiExplorer(options =>
             {
                 options.GroupNameFormat = "'v'VVV";
             });

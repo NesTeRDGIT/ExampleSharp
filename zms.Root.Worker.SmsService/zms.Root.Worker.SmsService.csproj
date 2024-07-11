@@ -1,6 +1,6 @@
-<Project Sdk="Microsoft.NET.Sdk.Worker;Microsoft.NET.Sdk.Publish">
+<Project Sdk="Microsoft.NET.Sdk.Worker">
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>dotnet-zms.Root.Worker.SmsService-85af3157-7515-486e-9c3e-3505fa157ada</UserSecretsId>
@@ -8,13 +8,16 @@
     <DockerfileTag>zms.smsworker</DockerfileTag>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.18.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.KeyPerFile" Version="8.0.7" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\zms.Infrastructure.External.SmsService.Beeline\zms.Infrastructure.External.SmsService.Beeline.csproj" />
     <ProjectReference Include="..\zms.Infrastructure.Logging.Serilog\zms.Infrastructure.Logging.Serilog.csproj" />
     <ProjectReference Include="..\zms.Root.Module.Application\zms.Root.Module.Application.csproj" />
+    <ProjectReference Include="..\zms.Root.Module.SmsService.Beeline\zms.Root.Module.SmsService.Beeline.csproj" />
+    <ProjectReference Include="..\zms.Root.Module.SmsService.Rostelecom\zms.Root.Module.SmsService.Rostelecom.csproj" />
     <ProjectReference Include="..\zms.Root.Module.SmsService\zms.Root.Module.SmsService.csproj" />
   </ItemGroup>
 </Project>

@@ -23,7 +23,7 @@ namespace zms.Persistence.SqlServer.EF.SmsService.QueryObject.ClientQuery
 
         public async Task<long> CountAsync(LightReadParams<MessageProjection> lightReadParams)
         {
-            return await GetMessageProjections().Apply(lightReadParams).CountAsync();
+            return await GetMessageProjections().ApplyFilter(lightReadParams).CountAsync();
         }
 
         internal IQueryable<MessageProjection> GetMessageProjections()
